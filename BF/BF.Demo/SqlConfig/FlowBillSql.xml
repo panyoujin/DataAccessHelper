@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<HCIP.AjaxDataSetting>
+
+  <!-- 获取我的申请-->
+  <Data name="GetMyFlowApply">
+    <SqlDefinition type="sql" ConnStringName="BOSDbContext">
+      <SqlCommand>
+        <![CDATA[
+        SELECT b.`F_FlowName` ,o.`F_FullName` AS DepartName,u.`F_RealName` AS ApplyUser,b.`F_CreatorTime`,b.`F_BillNo`,bb.`F_FlowNoteID`,IFNULL(bb.`F_ToNoteName`,bb.`F_FlowNoteName`) AS FlowNote
+        ,b.`F_FlowID`,b.`F_FlowTable`,b.F_BusinessID
+        FROM `Flow_Bill` b 
+        LEFT JOIN `Sys_User` u ON b.`F_CurrentAudit`=u.F_Id
+        LEFT JOIN `Sys_Organize` o ON u.`F_DepartmentId`=o.`F_Id`
+        LEFT JOIN `Flow_Bill` bb ON b.`F_BillNo`=bb.`F_BillNo`
+        WHERE b.`F_CurrentAudit`=@@ApplyUserID@@ and b.`F_FlowNoteID`='0' AND (bb.`F_ToNoteID` IS NULL OR bb.`F_ToNoteID` IS NOT NULL AND bb.`F_IsEnd`)
+        ORDER BY <R%=  @@OrderBy@@ , %R> b.`F_CreatorTime` DESC
+        <%= LIMIT @@StartSize@@ , @@EndSize@@%> ;
+        SELECT COUNT(0) AS total
+        FROM `Flow_Bill` b 
+        WHERE b.`F_CurrentAudit`=@@ApplyUserID@@ and b.`F_FlowNoteID`='0';
+      ]]>
+      </SqlCommand>
+    </SqlDefinition>
+  </Data>
+</HCIP.AjaxDataSetting>
