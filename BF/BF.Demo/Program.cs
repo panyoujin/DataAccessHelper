@@ -11,6 +11,7 @@ namespace BF.Demo
     {
         static void Main(string[] args)
         {
+            var s = DataAccessHelper.Cache.Memcache.MemcacheManager.Instance.Get("OA");
             Dictionary<string, object> dic = new Dictionary<string, object>();
             dic["ApplyUserID"] = "9f2ec079-7d0f-4fe2-90ab-8b09a8302aba";
             var dt = DataAccessFactory.DALBase.QueryForDataTable("GetMyFlowApply", dic);

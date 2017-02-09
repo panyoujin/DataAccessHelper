@@ -5,14 +5,14 @@ namespace BF.DataAccessHelper
 {
     public class CacheFactory
     {
-        private static readonly ICacheBase _cacheBase = GetDALBase();
+        private static readonly ICacheBase _cacheBase = GetCacheBase();
 
-        private static ICacheBase GetDALBase()
+        private static ICacheBase GetCacheBase()
         {
             ICacheBase cacheBase = null;
             switch (CacheConfig.CacheType)
             {
-                case "MySql":
+                case "Memcache":
                     cacheBase = null;// MySqlDBBase.Instance;
                     break;
                 default:
@@ -25,7 +25,7 @@ namespace BF.DataAccessHelper
         {
 
         }
-        public static ICacheBase DALBase
+        public static ICacheBase CacheBase
         {
             get
             {

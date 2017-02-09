@@ -30,8 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Enyim.Caching">
+      <HintPath>..\Lib\Enyim.Caching.dll</HintPath>
+    </Reference>
     <Reference Include="FastReflectionLib">
       <HintPath>..\Lib\FastReflectionLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MemcachedProviders">
+      <HintPath>..\Lib\MemcachedProviders.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.6.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -49,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheFactory.cs" />
+    <Compile Include="Cache\Memcache\CompressHelper.cs" />
+    <Compile Include="Cache\Memcache\MemcacheKey.cs" />
+    <Compile Include="Cache\Memcache\MemcacheManager.cs" />
     <Compile Include="Interface\ICacheBase.cs" />
     <Compile Include="Interface\IDBBase.cs" />
     <Compile Include="MySql\MySqlDBBase.cs" />
@@ -70,6 +79,7 @@
     <Compile Include="Utilities\IConfigRefresher.cs" />
     <Compile Include="Utilities\XmlUtility.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

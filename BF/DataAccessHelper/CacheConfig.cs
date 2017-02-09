@@ -5,7 +5,7 @@ namespace BF.DataAccessHelper
     public class CacheConfig
     {
         /// <summary>
-        /// 数据库类型
+        /// 缓存类型
         /// </summary>
         public static string CacheType
         {
