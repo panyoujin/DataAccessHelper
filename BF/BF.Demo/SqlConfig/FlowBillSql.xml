@@ -1,34 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <HCIP.AjaxDataSetting>
 
-  <!--颍淮农商银行 新增的记录-->
+  <!--新增的记录-->
   <Data name="Get_add_fyyh_Account">
     <SqlDefinition type="MySql" ConnStringName="mysql_fyyh_web">
       <SqlCommand>
         <![CDATA[
        SELECT 
-      `UserId` AS UserId,
-      `Usrnbr` AS Usrnbr,
-      `UserName` AS UserName,
-      `NickName` AS NickName,
-      `Mobile` AS Mobile,
-      `Email` AS Email,
-      `PortraitPicId` AS PortraitPicId,
-      `BirthDate` AS BirthDate,
-      `ProvinceName` AS Province,
-      `CityName` AS City,
-      `Address` AS Address,
-      `CreateDate` AS CreateDate,
-      `Status` AS `Status`,
-      `RegType` AS RegType,
-      `AccType` AS AccType,
-      `CompanyName` AS CompanyName,
-      `IDcard` AS IDcard,
-      `id_type` AS Idtyp,
-       '' AS Usrsex,
-       '' AS Orgcode,
-       '' AS County,
-       '颍淮农商银行' AS SystemName
+      `*
        FROM `fyyh_web`.`ur_user` AS u
        <%= WHERE u.`CreateDate` > @@LastTime@@ %> 
        ORDER BY u.`CreateDate`,u.`UserId`
