@@ -1,7 +1,7 @@
 ﻿using DataAccessHelper.Interface;
 using System;
 
-namespace DataAccessHelper
+namespace DataAccessHelper.Cache
 {
     public class CacheFactory
     {

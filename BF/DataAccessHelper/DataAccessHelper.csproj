@@ -54,15 +54,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheFactory.cs" />
+    <Compile Include="Cache\CacheFactory.cs" />
     <Compile Include="Cache\Memcache\CompressHelper.cs" />
     <Compile Include="Cache\Memcache\MemcacheKey.cs" />
     <Compile Include="Cache\Memcache\MemcacheManager.cs" />
-    <Compile Include="Extensions\ObjectExtend.cs" />
+    <Compile Include="Extend\Ext.Convert.cs" />
+    <Compile Include="Extend\Ext.DateTime.cs" />
+    <Compile Include="Extend\Ext.Object.cs" />
     <Compile Include="Interface\ICacheBase.cs" />
     <Compile Include="Interface\ISQLHelper.cs" />
     <Compile Include="Models\SqlAnalyModel.cs" />
-    <Compile Include="Extensions\DataTableExtensions.cs" />
+    <Compile Include="Extend\Ext.DataTable.cs" />
     <Compile Include="Helper\ConfigHelper.cs" />
     <Compile Include="Helper\ObjectSetValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,8 +72,7 @@
     <Compile Include="SQLAnalytical\KeywordVariable.cs" />
     <Compile Include="SQLAnalytical\ParseItem.cs" />
     <Compile Include="SQLAnalytical\SqlDefinition.cs" />
-    <Compile Include="CacheConfig.cs" />
-    <Compile Include="SqlConfig.cs" />
+    <Compile Include="Cache\CacheConfig.cs" />
     <Compile Include="SQLHelper\MySqlHelper.cs" />
     <Compile Include="SQLHelper\SQLHelperFactory.cs" />
     <Compile Include="SQLHelper\SqlServerHelper.cs" />
@@ -79,7 +80,9 @@
     <Compile Include="Utilities\IConfigRefresher.cs" />
     <Compile Include="Utilities\XmlUtility.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Extend\Ext.Enum.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

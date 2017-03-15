@@ -1,6 +1,6 @@
 ﻿using DataAccessHelper.Helper;
 
-namespace DataAccessHelper
+namespace DataAccessHelper.Cache
 {
     public class CacheConfig
     {

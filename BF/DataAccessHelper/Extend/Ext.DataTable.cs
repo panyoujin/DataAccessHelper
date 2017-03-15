@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 
-namespace DataAccessHelper.Extensions
+namespace DataAccessHelper.Extend
 {
-    public class DataTableExtensions
+    public static partial class Ext
     {
         /// <summary>
         /// 
