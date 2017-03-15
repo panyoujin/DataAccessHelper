@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace BF.DataAccessHelper.Utilities
+namespace DataAccessHelper.Utilities
 {
     /// <summary>
     /// XML 操作的工具

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BF.DataAccessHelper", "DataAccessHelper\BF.DataAccessHelper.csproj", "{B8951D00-F24C-447C-A3C5-C5E04B56B2A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessHelper", "DataAccessHelper\DataAccessHelper.csproj", "{B8951D00-F24C-447C-A3C5-C5E04B56B2A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BF.Demo", "BF.Demo\BF.Demo.csproj", "{1FDCD0A5-84BE-4CB5-972F-DB155FCD98F6}"
 EndProject

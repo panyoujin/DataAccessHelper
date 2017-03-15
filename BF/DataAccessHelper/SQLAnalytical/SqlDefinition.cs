@@ -1,11 +1,12 @@
-﻿using BF.DataAccessHelper.Helper;
-using BF.DataAccessHelper.Utilities;
+﻿using DataAccessHelper.Helper;
+using DataAccessHelper.Models;
+using DataAccessHelper.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace BF.DataAccessHelper.SQLAnalytical
+namespace DataAccessHelper.SQLAnalytical
 {
     /// <summary>
     /// SQL 节点定义
@@ -13,24 +14,17 @@ namespace BF.DataAccessHelper.SQLAnalytical
     [Serializable]
     public class SqlDefinition
     {
-        /// <summary>
-        /// SQL 的类型枚举
-        /// </summary>
-        public enum CommandType
-        {
-            Sql,
-            StoreProcedure
-        }
         #region ctor..
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="node"></param>
-        public SqlDefinition(XmlNode node, Dictionary<string, object> keyValue)
+        public SqlDefinition(XmlNode node)
         {
-            this._keyValue = keyValue;
-            Parse(node);
-            _parseItems = GetAllParseItem(this._sql);
+            this.SqlCommand = XmlUtility.getNodeStringValue(node["SqlCommand"]);
+
+            this.SqlDBType = XmlUtility.getNodeAttributeStringValue(node, "type");
+            this.SqlConnStringName = XmlUtility.getNodeAttributeStringValue(node, "ConnStringName", ConfigHelper.GetConfigValue("ConnStringName", "DbContext"));
         }
 
         #endregion
@@ -45,7 +39,7 @@ namespace BF.DataAccessHelper.SQLAnalytical
         /// 执行的SQL命令
         /// </summary>
         private string _sql;
-        public string SqlCommand
+        private string SqlCommand
         {
             get
             {
@@ -53,52 +47,29 @@ namespace BF.DataAccessHelper.SQLAnalytical
                 if (this.ParseItems == null || this.ParseItems.Count <= 0) return outSql;
                 foreach (ParseItem item in this.ParseItems)
                 {
-                    outSql = outSql + item.GetResult();
+                    outSql = outSql + item.GetResult(this.SqlDBType);
                 }
                 return outSql;
             }
-            private set { _sql = value; }
+            set { _sql = value; }
         }
-        public CommandType SqlType
+
+        private string SqlConnStringName { get; set; }
+        private string SqlDBType { get; set; }
+        public SqlAnalyModel SqlAnaly(Dictionary<string, object> keyValue)
         {
-            get;
-            set;
+            SqlAnalyModel model = new SqlAnalyModel();
+            GetAllParseItem(_sql, keyValue);
+            model.SqlText = SqlCommand;
+            model.SqlConnStringName = SqlConnStringName;
+            model.DBType = SqlDBType;
+            return model;
         }
-        private ParameterInfoCollection _parameters;
-        /// <summary>
-        /// SQL 命令的参数
-        /// </summary>
-        public ParameterInfoCollection Parameters
-        {
-            get { return _parameters; }
-            set { _parameters = value; }
-        }
-        private Dictionary<string, object> _keyValue;
-        /// <summary>
-        /// 关键字和值的集合 解析SQL使用
-        /// </summary>
-        public Dictionary<string, object> KeyValue
-        {
-            get
-            {
-                return _keyValue ?? new Dictionary<string, object>();
-            }
-        }
+        
         #endregion
 
         #region method define
-        private void Parse(XmlNode node)
-        {
-            this.SqlCommand = XmlUtility.getNodeStringValue(node["SqlCommand"]);
-            this.SqlType = (CommandType)Enum.Parse(typeof(CommandType), XmlUtility.getNodeAttributeStringValue(node, "type", "Sql"), true);
-            SqlConfig.SqlConnStringName = XmlUtility.getNodeAttributeStringValue(node, "ConnStringName", ConfigHelper.GetConfigValue("ConnStringName", "BOSDbContext"));
-            _parameters = new ParameterInfoCollection();
-            ///添加参数集合
-            foreach (XmlNode nodepara in XmlUtility.getSubNodeList(node, "Parameters/Parameter"))
-            {
-                _parameters.Add(new ParameterInfo(nodepara));
-            }
-        }
+        
 
         /// <summary>
         /// 解析出SQL语句中需要待解析的内容
@@ -106,7 +77,7 @@ namespace BF.DataAccessHelper.SQLAnalytical
         /// <param name="sqlText"></param>
         /// <param name="isParam">是否参数化  flase:否 true:是</param>
         /// <returns></returns>
-        private List<ParseItem> GetAllParseItem(string sqlText)
+        private List<ParseItem> GetAllParseItem(string sqlText, Dictionary<string, object> KeyValue)
         {
             string returnSql = sqlText;
             ///试用正则表达式先找出关键字,关键字必须使用<%= %>包含起来
@@ -119,9 +90,9 @@ namespace BF.DataAccessHelper.SQLAnalytical
             {
                 string matchingSql = c.ToString();
                 ///在原始的SQL中取出掉这些待解析的SQL
-                var parseItem = new ParseItem(c.Value.Replace("<%=", "").Replace("%>", ""), this.KeyValue);
+                var parseItem = new ParseItem(c.Value.Replace("<%=", "").Replace("%>", ""), KeyValue);
                 //returnResult.Add(parseItem);
-                _sql = _sql.Replace(matchingSql, parseItem.GetResult());
+                _sql = _sql.Replace(matchingSql, parseItem.GetResult(this.SqlDBType));
             }
             regKeyword = new Regex("<R%=.*?%R>");
             mc = regKeyword.Matches(_sql);
@@ -129,9 +100,9 @@ namespace BF.DataAccessHelper.SQLAnalytical
             {
                 string matchingSql = c.ToString();
                 ///在原始的SQL中取出掉这些待解析的SQL
-                var parseItem = new ParseItem(c.Value.Replace("<R%=", "").Replace("%R>", ""), this.KeyValue);
+                var parseItem = new ParseItem(c.Value.Replace("<R%=", "").Replace("%R>", ""), KeyValue);
                 //returnResult.Add(parseItem);
-                _sql = _sql.Replace(matchingSql, parseItem.GetResult(false));
+                _sql = _sql.Replace(matchingSql, parseItem.GetResult(this.SqlDBType, false));
             }
 
             regKeyword = new Regex("@@.*?@@");
@@ -140,9 +111,9 @@ namespace BF.DataAccessHelper.SQLAnalytical
             {
                 string matchingSql = c.ToString();
                 ///在原始的SQL中取出掉这些待解析的SQL
-                var parseItem = new ParseItem(c.Value.Replace("<%=", "").Replace("%>", ""), this.KeyValue);
+                var parseItem = new ParseItem(c.Value.Replace("<%=", "").Replace("%>", ""), KeyValue);
                 //returnResult.Add(parseItem);
-                _sql = _sql.Replace(matchingSql, parseItem.GetResult());
+                _sql = _sql.Replace(matchingSql, parseItem.GetResult(this.SqlDBType));
             }
             return returnResult;
         }

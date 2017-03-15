@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace BF.DataAccessHelper.Utilities
+namespace DataAccessHelper.Utilities
 {
     /// <summary>
     /// 文件信息配置刷新器
@@ -11,7 +11,7 @@ namespace BF.DataAccessHelper.Utilities
     {
 
         private FileInfo _currfile, _lastfile;
-        private static IDictionary<string, FileInfo> _files = new Dictionary<string, FileInfo>();
+        private static Dictionary<string, FileInfo> _files = new Dictionary<string, FileInfo>();
 
         /// <summary>
         /// 构造文件信息配置刷新器实例。
@@ -45,7 +45,15 @@ namespace BF.DataAccessHelper.Utilities
         {
             func();
             // Add or Edit
-            _files[this._currfile.FullName] = this._currfile;
+            try
+            {
+
+                _files[this._currfile.FullName] = this._currfile;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

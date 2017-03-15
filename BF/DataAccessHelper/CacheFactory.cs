@@ -1,7 +1,7 @@
-﻿using BF.DataAccessHelper.Interface;
+﻿using DataAccessHelper.Interface;
 using System;
 
-namespace BF.DataAccessHelper
+namespace DataAccessHelper
 {
     public class CacheFactory
     {

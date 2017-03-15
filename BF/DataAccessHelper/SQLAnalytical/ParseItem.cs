@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace BF.DataAccessHelper.SQLAnalytical
+namespace DataAccessHelper.SQLAnalytical
 {
     /// <summary>
     /// SQLCommand 中需要解析的项
@@ -73,7 +73,7 @@ namespace BF.DataAccessHelper.SQLAnalytical
         /// </summary>
         /// <param name="adapter"></param>
         /// <returns></returns>
-        public virtual string GetResult(bool isParam = true)
+        public virtual string GetResult(string type, bool isParam = true)
         {
             ///至一个全部参数为空的标记，如果全部参数为空，则整个
             ///解析串返回空
@@ -87,7 +87,18 @@ namespace BF.DataAccessHelper.SQLAnalytical
                 if (string.IsNullOrEmpty(result) && keyItem.IsNull) allEmpty = true;
                 if (isParam)
                 {
-                    returnValue = returnValue.Replace(keyItem.Keyword, string.Format("?{0}", keyItem.KeyName));
+                    switch (type.ToLower())
+                    {
+                        case "sqlserver":
+                            returnValue = returnValue.Replace(keyItem.Keyword, string.Format("@{0}", keyItem.KeyName));
+                            break;
+                        case "mysql":
+                            returnValue = returnValue.Replace(keyItem.Keyword, string.Format("?{0}", keyItem.KeyName));
+                            break;
+                        default:
+                            returnValue = returnValue.Replace(keyItem.Keyword, string.Format("@{0}", keyItem.KeyName));
+                            break;
+                    }
                 }
                 else
                 {

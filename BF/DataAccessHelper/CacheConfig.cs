@@ -1,6 +1,6 @@
-﻿using BF.DataAccessHelper.Helper;
+﻿using DataAccessHelper.Helper;
 
-namespace BF.DataAccessHelper
+namespace DataAccessHelper
 {
     public class CacheConfig
     {

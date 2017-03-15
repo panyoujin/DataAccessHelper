@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BF.DataAccessHelper.SQLAnalytical
+namespace DataAccessHelper.SQLAnalytical
 {
     /// <summary>
     /// 变量解析的来源

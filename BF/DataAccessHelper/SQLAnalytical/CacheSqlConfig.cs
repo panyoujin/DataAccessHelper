@@ -1,18 +1,19 @@
 ﻿
-using BF.DataAccessHelper.Helper;
-using BF.DataAccessHelper.Utilities;
+using DataAccessHelper.Helper;
+using DataAccessHelper.Models;
+using DataAccessHelper.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace BF.DataAccessHelper.SQLAnalytical
+namespace DataAccessHelper.SQLAnalytical
 {
     public class CacheSqlConfig
     {
         private static readonly Lazy<CacheSqlConfig> _instance = new Lazy<CacheSqlConfig>(() => new CacheSqlConfig());
-        private static Dictionary<string, XmlNode> _sqlDic = new Dictionary<string, XmlNode>();
+        private static Dictionary<string, SqlDefinition> _sqlDic = new Dictionary<string, SqlDefinition>();
         static object _SqlLock = new object();
         private string _sqlConfigPath;
         /// <summary>
@@ -62,25 +63,24 @@ namespace BF.DataAccessHelper.SQLAnalytical
         /// <param name="key"></param>
         /// <param name="isParam"></param>
         /// <returns></returns>
-        public string GetSqlByKey(string key, Dictionary<string, object> keyValue)
+        public SqlAnalyModel GetSqlAnalyByKey(string key, Dictionary<string, object> keyValue)
         {
 
             var tempKey = key.ToLower();
             //如果缓存的SQL为空，或者在缓存中找不到对应的KEY 就从文件中加载
             if (_sqlDic == null || _sqlDic.Count <= 0 || !_sqlDic.ContainsKey(tempKey))
             {
-                SqlConfigInit();
+                SqlConfigInit(tempKey);
             }
             if (!_sqlDic.ContainsKey(tempKey))
             {
-                return key;
+                //return new SqlAnalyModel() { SqlText = key };
                 throw new Exception(string.Format("配置中找不到KEY：{0}", key));
             }
             Dictionary<string, object> keyValueTemp = ReplaceInjection(keyValue);
-            var sqlDefinition = new SqlDefinition(_sqlDic[tempKey], keyValueTemp);
-            return sqlDefinition.SqlCommand;
+            var sqlDefinition = _sqlDic[tempKey];
+            return sqlDefinition.SqlAnaly(keyValueTemp);
         }
-
         /// <summary>
         /// 替换输入字符串中包含的SQL敏感词
         /// </summary>
@@ -88,6 +88,7 @@ namespace BF.DataAccessHelper.SQLAnalytical
         /// <returns></returns>
         private Dictionary<string, object> ReplaceInjection(Dictionary<string, object> keyValue)
         {
+            return keyValue;
             Dictionary<string, object> keyValueTemp = new Dictionary<string, object>();
             if (keyValue != null)
             {//临时注释
@@ -107,16 +108,33 @@ namespace BF.DataAccessHelper.SQLAnalytical
             return keyValueTemp;
         }
 
+        #region InitSql
         /// <summary>
         /// SQL配置加载
         /// </summary>
-        private void SqlConfigInit()
+        private void SqlConfigInit(string key = "", bool isClear = false)
         {
-            _sqlDic.Clear();//调试的时候报索引 引用超出了界限.临时添加
-            GetFileToXml(SqlConfigPath);
+            lock (_SqlLock)
+            {
+                if (isClear)
+                {
+                    _sqlDic.Clear();
+                }
+                if (string.IsNullOrWhiteSpace(key))
+                {
+                    if (_sqlDic == null || _sqlDic.Count <= 0)
+                    {
+                        GetFileToXml(SqlConfigPath);
+                    }
+                }
+                else if (_sqlDic == null || _sqlDic.Count <= 0 || !_sqlDic.ContainsKey(key))
+                {
+                    GetFileToXml(SqlConfigPath);
+                }
+            }
         }
 
-        private XmlNode GetFileToXml(string path)
+        private void GetFileToXml(string path)
         {
             var dir = new DirectoryInfo(path);
             var files = dir.GetFiles();
@@ -132,38 +150,38 @@ namespace BF.DataAccessHelper.SQLAnalytical
             {
                 GetFileToXml(d.FullName);
             }
-            return null;
         }
 
         private void GetXml(FileInfo file)
         {
             IConfigRefresher refresher = new FileInfoConfigRefresher(file.FullName);
-            if (true || !refresher.IsLatest)
+            if (!refresher.IsLatest)
             {
                 refresher.Refresh(() =>
                 {
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(file.FullName);
-                    foreach (XmlNode nodeChild in doc.DocumentElement.ChildNodes)
+                    try
                     {
-                        if (nodeChild.NodeType != XmlNodeType.Element && nodeChild.Name.ToLower() != "data") continue;
-                        if (nodeChild.Attributes["name"] == null) continue;
-                        var key = XmlUtility.getNodeAttributeStringValue(nodeChild, "name").ToLower();
-                        lock (_SqlLock)
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(file.FullName);
+                        foreach (XmlNode nodeChild in doc.DocumentElement.ChildNodes)
                         {
-                            if (!_sqlDic.ContainsKey(key))
+                            if (nodeChild.NodeType != XmlNodeType.Element && nodeChild.Name.ToLower() != "data") continue;
+                            if (nodeChild.Attributes["name"] == null) continue;
+                            var key = XmlUtility.getNodeAttributeStringValue(nodeChild, "name").ToLower();
+                            lock (_SqlLock)
                             {
-                                _sqlDic.Add(key, nodeChild["SqlDefinition"]);
+                                _sqlDic[key] = new SqlDefinition(nodeChild["SqlDefinition"]);
                             }
-                            else
-                            {
-                                _sqlDic[key] = nodeChild["SqlDefinition"];
-                            }
+
                         }
+                    }
+                    catch (Exception ex)
+                    {
 
                     }
                 });
             }
         }
+        #endregion InitSql
     }
 }

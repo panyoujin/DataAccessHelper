@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace BF.DataAccessHelper.Helper
+namespace DataAccessHelper.Helper
 {
     public class ObjectSetValue
     {

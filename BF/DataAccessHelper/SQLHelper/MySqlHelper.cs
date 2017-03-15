@@ -1,4 +1,5 @@
 ﻿
+using DataAccessHelper.Interface;
 using FastReflectionLib;
 using MySql.Data.MySqlClient;
 using System;
@@ -7,16 +8,25 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 
-namespace BF.DataAccessHelper.MySql
+namespace DataAccessHelper.SQLHelper
 {
-    public class MySqlHelper
+    public class MySqlHelper : ISQLHelper
     {
         #region Fields
-        private static string ConnectionString
+
+        public MySqlHelper(string sqlConnStringName)
+        {
+            SqlConnStringName = sqlConnStringName;
+        }
+
+        private string SqlConnStringName { get; set; }
+
+
+        private string ConnectionString
         {
             get
             {
-                return SqlConfig.ConnectionString;// System.Configuration.ConfigurationManager.ConnectionStrings["SqlConnString"].ConnectionString; 
+                return System.Configuration.ConfigurationManager.ConnectionStrings[SqlConnStringName].ConnectionString;
             }
         }
         private static readonly BindingFlags bf = BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic;
@@ -32,7 +42,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="sqlText">数据库命令：存储过程名或sql语句</param>
         /// <param name="cmdType">命令类型</param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType)
         {
             var result = 0;
             MySqlTransaction trans = null;
@@ -68,7 +78,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="isUseTrans">是否启用事务</param> 
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType, bool isUseTrans)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -103,7 +113,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="sqlParam">sql命令的一个参数 （可为空）</param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter sqlParam)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter sqlParam)
         {
             var result = 0;
             MySqlTransaction trans = null;
@@ -144,7 +154,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="sqlParam">sql命令的一个参数 （可为空）</param>
         /// <param name="isUseTrans">是否启用事务</param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter sqlParam, bool isUseTrans)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter sqlParam, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -183,7 +193,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="sqlParams">sql命令的参数数组（可为空）</param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
         {
             var result = 0;
             MySqlTransaction trans = null;
@@ -224,7 +234,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="sqlParams">sql命令的参数数组（可为空）</param>
         /// <param name="isUseTrans">是否启用事务</param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams, bool isUseTrans)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -263,7 +273,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="dictParams">sql命令的参数数组（可为空）</param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
         {
             var result = 0;
             MySqlTransaction trans = null;
@@ -301,7 +311,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="dictParams">sql命令的参数数组（可为空）</param>
         /// <param name="isUseTrans">是否启用事务</param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans)
+        public int ExecuteNonQuery(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -340,7 +350,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="sqlText">数据库命令：存储过程名或sql语句</param>
         /// <param name="cmdType">命令类型</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType)
+        public object ExecuteScalar(string sqlText, CommandType cmdType)
         {
             object result = null;
             MySqlTransaction trans = null;
@@ -376,7 +386,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="isUseTrans">是否启用事务</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType, bool isUseTrans)
+        public object ExecuteScalar(string sqlText, CommandType cmdType, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -411,7 +421,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="sqlParam">sql命令参数 （可为空）</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter sqlParam)
+        public object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter sqlParam)
         {
             object result = null;
             MySqlTransaction trans = null;
@@ -452,7 +462,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="sqlParam">sql命令参数 （可为空）</param>
         /// <param name="isUseTrans">是否启用事务</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter sqlParam, bool isUseTrans)
+        public object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter sqlParam, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -491,7 +501,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="sqlParams">sql命令参数 （可为空）</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
+        public object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
         {
             object result = null;
             MySqlTransaction trans = null;
@@ -532,7 +542,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="sqlParams">sql命令参数 （可为空）</param>
         /// <param name="isUseTrans">是否使用事务</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams, bool isUseTrans)
+        public object ExecuteScalar(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -571,7 +581,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="cmdType">命令类型</param>
         /// <param name="sqlParams">sql命令参数 （可为空）</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
+        public object ExecuteScalar(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
         {
             object result = null;
             MySqlTransaction trans = null;
@@ -609,7 +619,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="sqlParams">sql命令参数 （可为空）</param>
         /// <param name="isUseTrans">是否使用事务</param>
         /// <returns></returns>
-        public static object ExecuteScalar(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans)
+        public object ExecuteScalar(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans)
         {
             if (isUseTrans)
             {
@@ -651,7 +661,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="paramValues">需要插入的值</param>
         /// <param name="strConnection">数据库连接字符串</param>
         /// <returns></returns>
-        public static int BatchInsert(string sqlString, int columes, object[] paramValues)
+        public int BatchInsert(string sqlString, int columes, object[] paramValues)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(sqlString);
@@ -691,7 +701,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="strConnection">数据库连接字符串</param>
         /// <param name="isSafe">是否直接拼接字符串安全插入</param>        
         /// <returns></returns>
-        public static int BatchInsert(string sqlString, int columes, object[] paramValues, bool isSafe)
+        public int BatchInsert(string sqlString, int columes, object[] paramValues, bool isSafe)
         {
             if (isSafe == true) //安全插入
             {
@@ -734,7 +744,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="listModels">要插入的实体数组</param>
         /// <param name="strConnection">数据库连接字符串</param>
         /// <returns></returns>
-        public static int BatchInsert<T>(string tbName, string[] columeArr, IList<T> listModels) where T : class, new()
+        public int BatchInsert<T>(string tbName, string[] columeArr, IList<T> listModels) where T : class, new()
         {
             if (listModels == null || listModels.Count == 0)
             {
@@ -840,7 +850,7 @@ namespace BF.DataAccessHelper.MySql
         /// <param name="dt">要插入的datatable</param>
         /// <param name="strConnection">数据库连接字符串</param>
         /// <returns></returns>
-        public static int BatchInsert(string tbName, string[] columeArr, DataTable dt)
+        public int BatchInsert(string tbName, string[] columeArr, DataTable dt)
         {
             if (dt == null || dt.Rows.Count == 0)
             {
@@ -886,7 +896,7 @@ namespace BF.DataAccessHelper.MySql
 
         #region Collections
 
-        public static IDataReader ExecuteReader(string sqlText, CommandType cmdType)
+        public IDataReader ExecuteReader(string sqlText, CommandType cmdType)
         {
             IDataReader reader = null;
             MySqlConnection conn = new MySqlConnection(ConnectionString);
@@ -897,7 +907,7 @@ namespace BF.DataAccessHelper.MySql
             return reader;
         }
 
-        public static IDataReader ExecuteReader(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
+        public IDataReader ExecuteReader(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
         {
             IDataReader reader = null;
             MySqlConnection conn = new MySqlConnection(ConnectionString);
@@ -908,7 +918,7 @@ namespace BF.DataAccessHelper.MySql
             return reader;
         }
 
-        public static IDataReader ExecuteReader(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
+        public IDataReader ExecuteReader(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
         {
             IDataReader reader = null;
             MySqlConnection conn = new MySqlConnection(ConnectionString);
@@ -919,7 +929,7 @@ namespace BF.DataAccessHelper.MySql
             return reader;
         }
 
-        public static DataSet QueryForDataSet(string sqlText, CommandType cmdType)
+        public DataSet QueryForDataSet(string sqlText, CommandType cmdType)
         {
             DataSet ds = new DataSet();
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
@@ -933,7 +943,7 @@ namespace BF.DataAccessHelper.MySql
             return ds;
         }
 
-        public static DataSet QueryForDataSet(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
+        public DataSet QueryForDataSet(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
         {
             if (sqlParams == null || sqlParams.Length == 0)
             {
@@ -951,7 +961,7 @@ namespace BF.DataAccessHelper.MySql
             return ds;
         }
 
-        public static DataSet QueryForDataSet(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
+        public DataSet QueryForDataSet(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
         {
             if (dictParams == null || dictParams.Count == 0)
             {
@@ -969,7 +979,7 @@ namespace BF.DataAccessHelper.MySql
             return ds;
         }
 
-        public static DataTable QueryForDataTable(string sqlText, CommandType cmdType)
+        public DataTable QueryForDataTable(string sqlText, CommandType cmdType)
         {
             DataTable dt = null;
             DataSet ds = QueryForDataSet(sqlText, cmdType);
@@ -980,7 +990,7 @@ namespace BF.DataAccessHelper.MySql
             return dt;
         }
 
-        public static DataTable QueryForDataTable(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
+        public DataTable QueryForDataTable(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
         {
             if (sqlParams == null || sqlParams.Length == 0)
             {
@@ -996,7 +1006,7 @@ namespace BF.DataAccessHelper.MySql
             return dt;
         }
 
-        public static DataTable QueryForDataTable(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
+        public DataTable QueryForDataTable(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
         {
             if (dictParams == null || dictParams.Count == 0)
             {
@@ -1012,7 +1022,7 @@ namespace BF.DataAccessHelper.MySql
             return dt;
         }
 
-        public static DataTable[] QueryForDataTables(string sqlText, CommandType cmdType)
+        public DataTable[] QueryForDataTables(string sqlText, CommandType cmdType)
         {
             DataTable[] dt = null;
             DataSet ds = QueryForDataSet(sqlText, cmdType);
@@ -1027,7 +1037,7 @@ namespace BF.DataAccessHelper.MySql
             return dt;
         }
 
-        public static DataTable[] QueryForDataTables(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
+        public DataTable[] QueryForDataTables(string sqlText, CommandType cmdType, MySqlParameter[] sqlParams)
         {
             if (sqlParams == null || sqlParams.Length == 0)
             {
@@ -1046,7 +1056,7 @@ namespace BF.DataAccessHelper.MySql
             return dt;
         }
 
-        public static DataTable[] QueryForDataTables(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
+        public DataTable[] QueryForDataTables(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams)
         {
             if (dictParams == null || dictParams.Count == 0)
             {
@@ -1069,20 +1079,20 @@ namespace BF.DataAccessHelper.MySql
 
         #region Prepare Parameter
 
-        public static MySqlParameter PrepareParameter(string paramName, object paramValue)
+        public MySqlParameter PrepareParameter(string paramName, object paramValue)
         {
             var parameter = new MySqlParameter(paramName, paramValue);
             return parameter;
         }
 
-        public static MySqlParameter PrepareParameter(string paramName, MySqlDbType dbType, object paramValue)
+        public MySqlParameter PrepareParameter(string paramName, MySqlDbType dbType, object paramValue)
         {
             var parameter = new MySqlParameter(paramName, dbType);
             parameter.Value = paramValue;
             return parameter;
         }
 
-        public static MySqlParameter[] PrepareParameters(string[] paramNames, object[] paramValues)
+        public MySqlParameter[] PrepareParameters(string[] paramNames, object[] paramValues)
         {
             var parameters = new MySqlParameter[paramNames.Length];
             for (int i = 0; i < paramNames.Length; i++)
@@ -1092,7 +1102,7 @@ namespace BF.DataAccessHelper.MySql
             return parameters;
         }
 
-        public static MySqlParameter[] PrepareParameters(string[] paramNames, MySqlDbType[] dbTypes, object[] paramValues)
+        public MySqlParameter[] PrepareParameters(string[] paramNames, MySqlDbType[] dbTypes, object[] paramValues)
         {
             var parameters = new MySqlParameter[paramNames.Length];
             for (int i = 0; i < paramNames.Length; i++)
@@ -1108,7 +1118,7 @@ namespace BF.DataAccessHelper.MySql
 
         #region prepare parameter
 
-        public static void PrepareCommand(MySqlCommand cmd, MySqlParameter parameter, CommandType cmdType)
+        public void PrepareCommand(MySqlCommand cmd, MySqlParameter parameter, CommandType cmdType)
         {
             cmd.CommandType = cmdType;
             if (parameter != null)
@@ -1117,7 +1127,7 @@ namespace BF.DataAccessHelper.MySql
             }
         }
 
-        public static void PrepareCommand(MySqlCommand cmd, MySqlParameter[] sqlParams, CommandType cmdType)
+        public void PrepareCommand(MySqlCommand cmd, MySqlParameter[] sqlParams, CommandType cmdType)
         {
             cmd.CommandType = cmdType;
             if (sqlParams != null && sqlParams.Length > 0)
@@ -1126,7 +1136,7 @@ namespace BF.DataAccessHelper.MySql
             }
         }
 
-        public static void PrepareCommand(MySqlCommand cmd, IDictionary<string, object> dictParams, CommandType cmdType)
+        public void PrepareCommand(MySqlCommand cmd, IDictionary<string, object> dictParams, CommandType cmdType)
         {
             cmd.CommandType = cmdType;
             if (dictParams == null || dictParams.Count == 0)
@@ -1140,7 +1150,7 @@ namespace BF.DataAccessHelper.MySql
             }
         }
 
-        public static void PrepareCommand(MySqlCommand cmd, string[] paraNames, object[] paraValues, CommandType cmdType)
+        public void PrepareCommand(MySqlCommand cmd, string[] paraNames, object[] paraValues, CommandType cmdType)
         {
             cmd.CommandType = cmdType;
             MySqlParameter[] sqlParas = PrepareParameters(paraNames, paraValues);
@@ -1151,28 +1161,28 @@ namespace BF.DataAccessHelper.MySql
             cmd.Parameters.AddRange(sqlParas);
         }
 
-        public static void PrepareCommand(MySqlCommand cmd, string paraName, object paraValue, CommandType cmdType)
+        public void PrepareCommand(MySqlCommand cmd, string paraName, object paraValue, CommandType cmdType)
         {
             cmd.CommandType = cmdType;
             MySqlParameter sqlPara = PrepareParameter(paraName, paraValue);
             cmd.Parameters.Add(sqlPara);
         }
 
-        public static void PrepareCommand(MySqlCommand cmd, int commandTimeout)
+        public void PrepareCommand(MySqlCommand cmd, int commandTimeout)
         {
             cmd.CommandTimeout = commandTimeout;
         }
 
         #endregion
 
-        
+
         #region Close Connection
 
         /// <summary>
         /// 关闭数据库连接
         /// </summary>
         /// <param name="conn"></param>
-        public static void CloseConnection(IDbConnection conn)
+        public void CloseConnection(IDbConnection conn)
         {
             if (conn == null)
             {

@@ -62,9 +62,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataAccessHelper\BF.DataAccessHelper.csproj">
+    <ProjectReference Include="..\DataAccessHelper\DataAccessHelper.csproj">
       <Project>{B8951D00-F24C-447C-A3C5-C5E04B56B2A5}</Project>
-      <Name>BF.DataAccessHelper</Name>
+      <Name>DataAccessHelper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

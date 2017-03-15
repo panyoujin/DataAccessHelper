@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace BF.DataAccessHelper.Cache.Memcache
+namespace DataAccessHelper.Cache.Memcache
 {
     public class CompressHelper
     {

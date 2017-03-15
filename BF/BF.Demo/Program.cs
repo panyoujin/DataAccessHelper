@@ -1,9 +1,12 @@
-﻿using BF.DataAccessHelper;
+﻿using DataAccessHelper;
+using DataAccessHelper.SQLHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using DataAccessHelper.Extensions;
 
 namespace BF.Demo
 {
@@ -11,12 +14,24 @@ namespace BF.Demo
     {
         static void Main(string[] args)
         {
-            var s = DataAccessHelper.Cache.Memcache.MemcacheManager.Instance.Get("OA");
-            Dictionary<string, object> dic = new Dictionary<string, object>();
-            dic["ApplyUserID"] = "9f2ec079-7d0f-4fe2-90ab-8b09a8302aba";
-            var dt = DataAccessFactory.DALBase.QueryForDataTable("GetMyFlowApply", dic);
-            Console.WriteLine(dt.Rows.Count);
+            Dictionary<string, object> dic = new A() { LastTime = DateTime.Now.AddYears(-2) }.ToDictionary();
+            new Thread(s => {
+                    var dt = SQLHelperFactory.Instance.QueryForDataTable("Get_add_fyyh_Account", dic);
+                    Console.WriteLine("颍淮:{0}", dt.Rows.Count);
+            }).Start();
+
+            new Thread(s => {
+                    var dt = SQLHelperFactory.Instance.QueryForDataTable("Get_add_CiticZX_Account", dic);
+                    Console.WriteLine("中信:{0}",dt.Rows.Count);
+            }).Start();
             Console.Read();
         }
+    }
+
+    public class A
+    {
+        public string Key { get; set; }
+
+        public DateTime LastTime { get; set; }
     }
 }

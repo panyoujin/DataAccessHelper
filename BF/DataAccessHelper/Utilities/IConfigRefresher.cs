@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BF.DataAccessHelper.Utilities
+namespace DataAccessHelper.Utilities
 {
     /// <summary>
     /// 定义配置刷新器接口

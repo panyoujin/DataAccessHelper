@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BF.DataAccessHelper.Interface
+namespace DataAccessHelper.Interface
 {
     public interface ICacheBase
     {

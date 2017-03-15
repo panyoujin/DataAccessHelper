@@ -7,8 +7,8 @@
     <ProjectGuid>{B8951D00-F24C-447C-A3C5-C5E04B56B2A5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BF.DataAccessHelper</RootNamespace>
-    <AssemblyName>BF.DataAccessHelper</AssemblyName>
+    <RootNamespace>DataAccessHelper</RootNamespace>
+    <AssemblyName>DataAccessHelper</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -58,23 +58,23 @@
     <Compile Include="Cache\Memcache\CompressHelper.cs" />
     <Compile Include="Cache\Memcache\MemcacheKey.cs" />
     <Compile Include="Cache\Memcache\MemcacheManager.cs" />
+    <Compile Include="Extensions\ObjectExtend.cs" />
     <Compile Include="Interface\ICacheBase.cs" />
-    <Compile Include="Interface\IDBBase.cs" />
-    <Compile Include="MySql\MySqlDBBase.cs" />
-    <Compile Include="DataAccessFactory.cs" />
+    <Compile Include="Interface\ISQLHelper.cs" />
+    <Compile Include="Models\SqlAnalyModel.cs" />
     <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="Helper\ConfigHelper.cs" />
     <Compile Include="Helper\ObjectSetValue.cs" />
-    <Compile Include="MySql\MySqlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLAnalytical\CacheSqlConfig.cs" />
     <Compile Include="SQLAnalytical\KeywordVariable.cs" />
-    <Compile Include="SQLAnalytical\ParameterInfo.cs" />
-    <Compile Include="SQLAnalytical\ParameterInfoCollection.cs" />
     <Compile Include="SQLAnalytical\ParseItem.cs" />
     <Compile Include="SQLAnalytical\SqlDefinition.cs" />
     <Compile Include="CacheConfig.cs" />
     <Compile Include="SqlConfig.cs" />
+    <Compile Include="SQLHelper\MySqlHelper.cs" />
+    <Compile Include="SQLHelper\SQLHelperFactory.cs" />
+    <Compile Include="SQLHelper\SqlServerHelper.cs" />
     <Compile Include="Utilities\FileInfoConfigRefresher.cs" />
     <Compile Include="Utilities\IConfigRefresher.cs" />
     <Compile Include="Utilities\XmlUtility.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 
-namespace BF.DataAccessHelper.Helper
+namespace DataAccessHelper.Helper
 {
     /// <summary>
     /// 解析项目配置文件的帮助类

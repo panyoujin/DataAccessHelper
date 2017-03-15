@@ -1,7 +1,7 @@
-﻿using BF.DataAccessHelper.Helper;
+﻿using DataAccessHelper.Helper;
 using System.Configuration;
 
-namespace BF.DataAccessHelper
+namespace DataAccessHelper
 {
     public class SqlConfig
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BF.DataAccessHelper.Cache.Memcache
+namespace DataAccessHelper.Cache.Memcache
 {
     [Serializable]
     public class MemcacheKey
