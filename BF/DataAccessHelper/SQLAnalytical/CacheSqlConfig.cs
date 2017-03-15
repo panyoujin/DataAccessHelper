@@ -13,7 +13,7 @@ namespace DataAccessHelper.SQLAnalytical
     public class CacheSqlConfig
     {
         private static readonly Lazy<CacheSqlConfig> _instance = new Lazy<CacheSqlConfig>(() => new CacheSqlConfig());
-        private static Dictionary<string, SqlDefinition> _sqlDic = new Dictionary<string, SqlDefinition>();
+        private static Dictionary<string, XmlNode> _sqlDic = new Dictionary<string, XmlNode>();
         static object _SqlLock = new object();
         private string _sqlConfigPath;
         /// <summary>
@@ -78,7 +78,7 @@ namespace DataAccessHelper.SQLAnalytical
                 throw new Exception(string.Format("配置中找不到KEY：{0}", key));
             }
             Dictionary<string, object> keyValueTemp = ReplaceInjection(keyValue);
-            var sqlDefinition = _sqlDic[tempKey];
+            var sqlDefinition = new SqlDefinition(_sqlDic[tempKey]);
             return sqlDefinition.SqlAnaly(keyValueTemp);
         }
         /// <summary>
@@ -170,7 +170,7 @@ namespace DataAccessHelper.SQLAnalytical
                             var key = XmlUtility.getNodeAttributeStringValue(nodeChild, "name").ToLower();
                             lock (_SqlLock)
                             {
-                                _sqlDic[key] = new SqlDefinition(nodeChild["SqlDefinition"]);
+                                _sqlDic[key] = nodeChild["SqlDefinition"];
                             }
 
                         }
