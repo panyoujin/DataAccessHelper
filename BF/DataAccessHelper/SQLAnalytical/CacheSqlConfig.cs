@@ -89,23 +89,23 @@ namespace DataAccessHelper.SQLAnalytical
         private Dictionary<string, object> ReplaceInjection(Dictionary<string, object> keyValue)
         {
             return keyValue;
-            Dictionary<string, object> keyValueTemp = new Dictionary<string, object>();
-            if (keyValue != null)
-            {//临时注释
-                var keyTemp = keyValue.Keys.ToList();
-                foreach (var dic in keyTemp)
-                {
-                    if (keyValueTemp.ContainsKey(dic))
-                    {
-                        keyValueTemp[dic] = keyValue[dic];
-                    }
-                    else
-                    {
-                        keyValueTemp.Add(dic, keyValue[dic]);
-                    }
-                }
-            }
-            return keyValueTemp;
+            //Dictionary<string, object> keyValueTemp = new Dictionary<string, object>();
+            //if (keyValue != null)
+            //{//临时注释
+            //    var keyTemp = keyValue.Keys.ToList();
+            //    foreach (var dic in keyTemp)
+            //    {
+            //        if (keyValueTemp.ContainsKey(dic))
+            //        {
+            //            keyValueTemp[dic] = keyValue[dic];
+            //        }
+            //        else
+            //        {
+            //            keyValueTemp.Add(dic, keyValue[dic]);
+            //        }
+            //    }
+            //}
+            //return keyValueTemp;
         }
 
         #region InitSql
@@ -177,7 +177,7 @@ namespace DataAccessHelper.SQLAnalytical
                     }
                     catch (Exception ex)
                     {
-
+                        throw ex;
                     }
                 });
             }

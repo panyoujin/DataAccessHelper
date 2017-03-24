@@ -52,7 +52,7 @@ namespace DataAccessHelper.Utilities
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
         }
     }

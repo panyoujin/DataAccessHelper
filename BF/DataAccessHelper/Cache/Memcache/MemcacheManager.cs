@@ -1,4 +1,5 @@
-﻿using MemcachedProviders.Cache;
+﻿using DataAccessHelper.Extend;
+using MemcachedProviders.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,10 @@ namespace DataAccessHelper.Cache.Memcache
                     SyncAddKeyDic(key, tbNames, description, expireTime);
                 }
                 catch (Exception sex)
-                { }
+                {
+                    sex.Source = sex.Source + ex.ToJson();
+                    throw sex;
+                }
             }
         }
         public async void AsyncAddKeyDic(string key, string tbNames = "", string description = "", long expireTime = 60)

@@ -67,7 +67,10 @@ namespace DataAccessHelper.Cache.Memcache
                     if (result != null && result is T)
                         obj = (T)result;
                 }
-                catch(Exception ex) { }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
             }
 
             return obj;
