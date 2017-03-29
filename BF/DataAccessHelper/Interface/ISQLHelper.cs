@@ -110,7 +110,7 @@ namespace DataAccessHelper.Interface
         T QueryForObject<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans);
 
         /// <summary>
-        /// 返回结果集和数量
+        /// 返回结果集和数量 专用于分页
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sqlText"></param>
@@ -119,7 +119,7 @@ namespace DataAccessHelper.Interface
         /// <param name="total"></param>
         /// <param name="isUseTrans"></param>
         /// <returns></returns>
-        IEnumerable<T> QueryMultiple<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, out int total, bool isUseTrans);
+        IEnumerable<T> QueryMultipleByPage<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, out int total, bool isUseTrans);
 
         /// <summary>
         /// 返回多个结果集，通过委托

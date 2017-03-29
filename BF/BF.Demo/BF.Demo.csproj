@@ -35,8 +35,9 @@
     <Reference Include="Enyim.Caching">
       <HintPath>..\Lib\Enyim.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\Lib\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MemcachedProviders">
       <HintPath>..\Lib\MemcachedProviders.dll</HintPath>
@@ -51,15 +52,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Log\Log.cs" />
+    <Compile Include="Log\LogFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="SqlConfig\FlowBillSql.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="SqlConfig\DemoSql.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataAccessHelper\DataAccessHelper.csproj">

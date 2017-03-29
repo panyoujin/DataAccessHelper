@@ -432,7 +432,7 @@ namespace DataAccessHelper.SQLHelper
             }
         }
 
-        public IEnumerable<T> QueryMultiple<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, out int total, bool isUseTrans)
+        public IEnumerable<T> QueryMultipleByPage<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, out int total, bool isUseTrans)
         {
             if (!isUseTrans)
             {
