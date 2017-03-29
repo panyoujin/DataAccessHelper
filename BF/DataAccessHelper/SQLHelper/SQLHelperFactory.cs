@@ -45,13 +45,13 @@ namespace DataAccessHelper.SQLHelper
             return sqlHelper;
         }
 
-        public int ExecuteNonQuery(string sqlKey, Dictionary<string, object> paramDic, bool isCache = false)
-        {
-            var sqlAnaly = CacheSqlConfig.Instance.GetSqlAnalyByKey(sqlKey, paramDic);
-            return GetSQLHelper(sqlAnaly).ExecuteNonQuery(sqlAnaly.SqlText, CommandType.Text, paramDic, false);
-        }
+        //public int ExecuteNonQuery(string sqlKey, Dictionary<string, object> paramDic, bool isCache = false)
+        //{
+        //    var sqlAnaly = CacheSqlConfig.Instance.GetSqlAnalyByKey(sqlKey, paramDic);
+        //    return GetSQLHelper(sqlAnaly).ExecuteNonQuery(sqlAnaly.SqlText, CommandType.Text, paramDic, false);
+        //}
 
-        public int ExecuteNonQuery(string sqlKey, Dictionary<string, object> paramDic, bool isUseTrans, bool isCache = false)
+        public int ExecuteNonQuery(string sqlKey, Dictionary<string, object> paramDic, bool isUseTrans = false, bool isCache = false)
         {
             var sqlAnaly = CacheSqlConfig.Instance.GetSqlAnalyByKey(sqlKey, paramDic);
             return GetSQLHelper(sqlAnaly).ExecuteNonQuery(sqlAnaly.SqlText, CommandType.Text, paramDic, isUseTrans);
@@ -98,12 +98,41 @@ namespace DataAccessHelper.SQLHelper
             return list.ToList();
         }
 
+        public dynamic QueryForObject(string sqlKey, Dictionary<string, object> paramDic, bool isUseTrans = false, bool isCache = false)
+        {
+            var sqlAnaly = CacheSqlConfig.Instance.GetSqlAnalyByKey(sqlKey, paramDic);
+            var t = GetSQLHelper(sqlAnaly).QueryForObject(sqlAnaly.SqlText, CommandType.Text, paramDic, isUseTrans);
+            return t;
+        }
+
         public T QueryForObjectByT<T>(string sqlKey, Dictionary<string, object> paramDic, bool isUseTrans = false, bool isCache = false)
         {
             var sqlAnaly = CacheSqlConfig.Instance.GetSqlAnalyByKey(sqlKey, paramDic);
             var t = GetSQLHelper(sqlAnaly).QueryForObject<T>(sqlAnaly.SqlText, CommandType.Text, paramDic, isUseTrans);
             return t;
         }
+        /// <summary>
+        /// 返回结果集和数量 专为分页功能而准备  数据集的sql在前面，返回数量的在后面
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sqlKey"></param>
+        /// <param name="paramDic"></param>
+        /// <param name="total"></param>
+        /// <param name="isUseTrans"></param>
+        /// <returns></returns>
+        public IEnumerable<T> QueryMultiple<T>(string sqlKey, Dictionary<string, object> paramDic, out int total, bool isUseTrans = false)
+        {
 
+            var sqlAnaly = CacheSqlConfig.Instance.GetSqlAnalyByKey(sqlKey, paramDic);
+            var t = GetSQLHelper(sqlAnaly).QueryMultiple<T>(sqlAnaly.SqlText, CommandType.Text, paramDic, out total, isUseTrans);
+            return t;
+        }
+
+        public IEnumerable<TReturn> QueryMultiple<TFirst, TSecond, TReturn>(string sqlKey, Dictionary<string, object> paramDic, Func<IEnumerable<TFirst>, IEnumerable<TSecond>, IEnumerable<TReturn>> func, bool isUseTrans = false)
+        {
+            var sqlAnaly = CacheSqlConfig.Instance.GetSqlAnalyByKey(sqlKey, paramDic);
+            var t = GetSQLHelper(sqlAnaly).QueryMultiple<TFirst, TSecond, TReturn>(sqlAnaly.SqlText, CommandType.Text, paramDic, func, isUseTrans);
+            return t;
+        }
     }
 }

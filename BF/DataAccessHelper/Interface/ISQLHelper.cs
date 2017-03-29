@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace DataAccessHelper.Interface
@@ -107,5 +108,32 @@ namespace DataAccessHelper.Interface
         /// <param name="dictParams">参数</param>
         /// <returns></returns>
         T QueryForObject<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans);
+
+        /// <summary>
+        /// 返回结果集和数量
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sqlText"></param>
+        /// <param name="cmdType"></param>
+        /// <param name="dictParams"></param>
+        /// <param name="total"></param>
+        /// <param name="isUseTrans"></param>
+        /// <returns></returns>
+        IEnumerable<T> QueryMultiple<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, out int total, bool isUseTrans);
+
+        /// <summary>
+        /// 返回多个结果集，通过委托
+        /// </summary>
+        /// <typeparam name="TFirst"></typeparam>
+        /// <typeparam name="TSecond"></typeparam>
+        /// <typeparam name="TReturn"></typeparam>
+        /// <param name="sqlText"></param>
+        /// <param name="cmdType"></param>
+        /// <param name="dictParams"></param>
+        /// <param name="func"></param>
+        /// <param name="isUseTrans"></param>
+        /// <returns></returns>
+        IEnumerable<TReturn> QueryMultiple<TFirst, TSecond, TReturn>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, Func<IEnumerable<TFirst>, IEnumerable<TSecond>, IEnumerable<TReturn>> func, bool isUseTrans);
+        
     }
 }

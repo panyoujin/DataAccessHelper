@@ -143,5 +143,14 @@ namespace DataAccessHelper.Extend
                 return string.Empty;
             return ToChineseDateTimeString(dateTime.Value);
         }
+        /// <summary>  
+        /// 获取时间戳  
+        /// </summary>  
+        /// <returns></returns>  
+        public static string GetTimeStamp(this DateTime dateTime)
+        {
+            TimeSpan ts = dateTime.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalSeconds).ToString();
+        }
     }
 }

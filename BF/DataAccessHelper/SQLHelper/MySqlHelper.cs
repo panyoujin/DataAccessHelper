@@ -69,17 +69,18 @@ namespace DataAccessHelper.SQLHelper
         /// <returns></returns>
         public int ExecuteNonQuery(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans)
         {
-            if (isUseTrans)
+            if (!isUseTrans)
             {
                 return ExecuteNonQuery(sqlText, cmdType, dictParams);
             }
             var result = 0;
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
+                conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 try
                 {
-                    result = conn.Execute(sqlText, dictParams, conn.BeginTransaction());
+                    result = conn.Execute(sqlText, dictParams, trans);
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -154,17 +155,18 @@ namespace DataAccessHelper.SQLHelper
         /// <returns></returns>
         public object ExecuteScalar(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans)
         {
-            if (isUseTrans)
+            if (!isUseTrans)
             {
                 return ExecuteScalar(sqlText, cmdType, dictParams);
             }
             object result = null;
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
+                conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 try
                 {
-                    result = conn.ExecuteScalar(sqlText, dictParams, conn.BeginTransaction());
+                    result = conn.ExecuteScalar(sqlText, dictParams, trans);
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -187,17 +189,18 @@ namespace DataAccessHelper.SQLHelper
         /// <returns></returns>
         public T ExecuteScalar<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, bool isUseTrans)
         {
-            if (isUseTrans)
+            if (!isUseTrans)
             {
                 return ExecuteScalar<T>(sqlText, cmdType, dictParams);
             }
             T t = default(T);
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
+                conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 try
                 {
-                    t = conn.ExecuteScalar<T>(sqlText, dictParams, conn.BeginTransaction());
+                    t = conn.ExecuteScalar<T>(sqlText, dictParams, trans);
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -260,10 +263,11 @@ namespace DataAccessHelper.SQLHelper
             IEnumerable<dynamic> result = default(IEnumerable<dynamic>);
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
+                conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 try
                 {
-                    result = conn.Query(sqlText, dictParams);
+                    result = conn.Query(sqlText, dictParams, trans);
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -301,10 +305,11 @@ namespace DataAccessHelper.SQLHelper
             IEnumerable<T> result = default(IEnumerable<T>);
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
+                conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 try
                 {
-                    result = conn.Query<T>(sqlText, dictParams);
+                    result = conn.Query<T>(sqlText, dictParams, trans);
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -342,10 +347,11 @@ namespace DataAccessHelper.SQLHelper
             dynamic result = default(dynamic);
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
+                conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 try
                 {
-                    result = conn.QueryFirst(sqlText, dictParams);
+                    result = conn.QueryFirst(sqlText, dictParams, trans);
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -384,10 +390,11 @@ namespace DataAccessHelper.SQLHelper
             T result = default(T);
             using (MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
+                conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 try
                 {
-                    result = conn.QueryFirst<T>(sqlText, dictParams);
+                    result = conn.QueryFirst<T>(sqlText, dictParams, trans);
                     trans.Commit();
                 }
                 catch (Exception ex)
@@ -399,6 +406,78 @@ namespace DataAccessHelper.SQLHelper
             }
             return result;
         }
+
+
+
+
+        public IEnumerable<T> QueryMultiple<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, out int total)
+        {
+            using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    var result = conn.QueryMultiple(sqlText, dictParams);
+
+                    var list = result.Read<T>();
+                    total = result.ReadFirst<int>();
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    ex.Source = ex.Source + sqlText;
+                    throw ex;
+                }
+            }
+        }
+
+        public IEnumerable<T> QueryMultiple<T>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, out int total, bool isUseTrans)
+        {
+            if (!isUseTrans)
+            {
+                return QueryMultiple<T>(sqlText, cmdType, dictParams, out total);
+            }
+
+            IEnumerable<T> list = default(IEnumerable<T>);
+            using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+            {
+                conn.Open();
+                MySqlTransaction trans = conn.BeginTransaction();
+                try
+                {
+                    var result = conn.QueryMultiple(sqlText, dictParams, trans);
+                    list = result.Read<T>();
+                    total = result.ReadFirst<int>();
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    ex.Source = ex.Source + sqlText;
+                    throw ex;
+                }
+            }
+            return list;
+        }
+
+
+        public IEnumerable<TReturn> QueryMultiple<TFirst, TSecond, TReturn>(string sqlText, CommandType cmdType, IDictionary<string, object> dictParams, Func<IEnumerable<TFirst>, IEnumerable<TSecond>, IEnumerable<TReturn>> func, bool isUseTrans)
+        {
+            using (MySqlConnection conn = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    var result = conn.QueryMultiple(sqlText, dictParams);
+                    return func(result.Read<TFirst>(), result.Read<TSecond>());
+                }
+                catch (Exception ex)
+                {
+                    ex.Source = ex.Source + sqlText;
+                    throw ex;
+                }
+            }
+        }
+
+        
         #endregion Query
 
 
